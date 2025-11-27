@@ -18,24 +18,30 @@ export const Hero: React.FC<HeroProps> = ({ products }) => {
 
   useEffect(() => {
     if (products.length <= 1) return;
-    const timer = setInterval(() => {
-      handleNext();
-    }, 7000); // 7 seconds per slide - Professional pace
-    return () => clearInterval(timer);
-  }, [products.length, current]);
 
+    const timer = setInterval(() => {
+      // Logic for PERMANENT infinite loop
+      // We use the functional update 'prev => ...' to ensure we always have the latest state
+      // independent of the closure, preventing the "stop at end" bug.
+      setCurrent((prev) => (prev + 1) % products.length);
+    }, 7000); // 7 seconds fixed interval
+
+    return () => clearInterval(timer);
+  }, [products.length]); // dependency only on length, not 'current', to keep the beat steady
+
+  // Manual Navigation Guard
   const handleNext = () => {
     if (isAnimating) return;
     setIsAnimating(true);
     setCurrent((prev) => (prev + 1) % products.length);
-    setTimeout(() => setIsAnimating(false), 800);
+    setTimeout(() => setIsAnimating(false), 1000); // Synced with CSS duration-1000
   };
 
   const handleDotClick = (index: number) => {
     if (index === current || isAnimating) return;
     setIsAnimating(true);
     setCurrent(index);
-    setTimeout(() => setIsAnimating(false), 800);
+    setTimeout(() => setIsAnimating(false), 1000); // Synced with CSS duration-1000
   };
 
   if (!products.length) return null;
