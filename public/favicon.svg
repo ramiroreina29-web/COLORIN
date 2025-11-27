@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="grad_pencil" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#f43f5e;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#e11d48;stop-opacity:1" />
+    </linearGradient>
+    <filter id="dropShadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="10"/>
+      <feOffset dx="5" dy="5" result="offsetblur"/>
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.3"/>
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+  
+  <!-- Stylized Red Pencil Body -->
+  <path fill="url(#grad_pencil)" filter="url(#dropShadow)" d="M380.5,100.8c-10-10-25-10-35,0l-200,200c-5,5-8,12-8,20v50c0,5,4,10,10,10h50c8,0,15-3,20-8l200-200
+	c10-10,10-25,0-35L380.5,100.8z"/>
+    
+  <!-- Pencil Tip (Wood) -->
+  <path fill="#fcd34d" d="M137.5,320.8l-40,40l40,0C137.5,360.8,137.5,320.8,137.5,320.8z"/>
+  
+  <!-- Lead/Graphite Tip -->
+  <path fill="#f43f5e" d="M97.5,360.8l15,15l-25,5L97.5,360.8z"/>
+
+  <!-- Eraser -->
+  <path fill="#fda4af" d="M417.5,63.8l-37,37l35,35l37-37c10-10,10-25,0-35l-0,0C442.5,53.8,427.5,53.8,417.5,63.8z"/>
+  
+  <!-- Metal Band -->
+  <path fill="#94a3b8" d="M380.5,100.8l35,35l5-5l-35-35L380.5,100.8z"/>
+  
+  <!-- Creative Swish/Stroke -->
+  <path fill="none" stroke="#f43f5e" stroke-width="25" stroke-linecap="round" d="M100,380 c-50,50 50,100 150,50 c80-40 150,0 200,20" opacity="0.8"/>
+</svg>
