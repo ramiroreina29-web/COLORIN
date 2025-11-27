@@ -59,7 +59,7 @@ const ProductDetail = () => {
           .neq('id', productData.id) // Exclude current
           .eq('activo', true)
           .order('visitas', { ascending: false }) // The "Amazon" Logic: Most popular first
-          .limit(6);
+          .limit(8); // Increased limit for carousel
         
         if (relatedData) setRelated(relatedData);
 
@@ -333,9 +333,30 @@ const ProductDetail = () => {
           </div>
         </div>
 
-        {/* MOST VIEWED / AMAZON STYLE RECOMMENDATIONS */}
+        {/* Video Section */}
+        {product.video_url && (
+            <div className="mt-16 max-w-4xl mx-auto bg-slate-900 dark:bg-black rounded-[2.5rem] p-4 md:p-8 text-white shadow-2xl border border-slate-800">
+                <div className="text-center mb-8 pt-4">
+                    <h3 className="text-3xl font-bold mb-2">{t('video_title')}</h3>
+                    <p className="text-gray-400">{t('video_desc')}</p>
+                </div>
+                <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 bg-black">
+                    <iframe 
+                        width="100%" 
+                        height="100%" 
+                        src={product.video_url.replace("watch?v=", "embed/")} 
+                        title="Product Video" 
+                        frameBorder="0" 
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                        allowFullScreen 
+                    />
+                </div>
+            </div>
+        )}
+
+        {/* MOST VIEWED / AMAZON STYLE RECOMMENDATIONS - MOVED ABOVE REVIEWS */}
         {related.length > 0 && (
-          <div className="mt-32 border-t border-gray-100 dark:border-slate-800 pt-12">
+          <div className="mt-24 border-t border-gray-100 dark:border-slate-800 pt-12">
             <div className="flex items-center justify-between mb-8">
                 <div>
                      <h3 className="text-2xl md:text-3xl font-black text-gray-900 dark:text-white">{t('related_products')}</h3>
@@ -346,7 +367,7 @@ const ProductDetail = () => {
             </div>
             
             {/* Horizontal Scroll Snap Carousel */}
-            <div className="flex overflow-x-auto pb-8 gap-6 snap-x hide-scrollbar">
+            <div className="flex overflow-x-auto pb-8 gap-6 snap-x hide-scrollbar px-1">
               {related.map((rel, idx) => {
                   const hasDisc = rel.precio_anterior && rel.precio_anterior > rel.precio;
                   // Related Item Title Translation
@@ -378,12 +399,12 @@ const ProductDetail = () => {
                              <h4 className="font-bold text-gray-900 dark:text-white leading-tight mb-2 line-clamp-2 min-h-[2.5em] group-hover:text-rose-600 dark:group-hover:text-rose-400 transition-colors">
                                 {relTitle}
                              </h4>
-                             {/* Mini Stars in Related */}
+                             {/* Mini Stars in Related (Real Data if available) */}
                              <div className="flex items-center gap-1 mb-2">
                                 <div className="flex text-yellow-400">
-                                    {[1,2,3,4,5].map(s => <Star key={s} className="w-3 h-3 fill-current" />)}
+                                    {[1,2,3,4,5].map(s => <Star key={s} className={`w-3 h-3 ${s <= Math.round(rel.average_rating || 0) ? 'fill-current' : 'text-gray-200 dark:text-slate-700'}`} />)}
                                 </div>
-                                <span className="text-[10px] text-gray-400">(120)</span>
+                                <span className="text-[10px] text-gray-400">({rel.reviews_count || 0})</span>
                              </div>
                              <div className="flex items-center justify-between">
                                 <div className="flex flex-col">
@@ -400,27 +421,6 @@ const ProductDetail = () => {
               )})}
             </div>
           </div>
-        )}
-
-        {/* Video Section */}
-        {product.video_url && (
-            <div className="mt-16 max-w-4xl mx-auto bg-slate-900 dark:bg-black rounded-[2.5rem] p-4 md:p-8 text-white shadow-2xl border border-slate-800">
-                <div className="text-center mb-8 pt-4">
-                    <h3 className="text-3xl font-bold mb-2">{t('video_title')}</h3>
-                    <p className="text-gray-400">{t('video_desc')}</p>
-                </div>
-                <div className="aspect-video rounded-3xl overflow-hidden shadow-2xl ring-1 ring-white/10 bg-black">
-                    <iframe 
-                        width="100%" 
-                        height="100%" 
-                        src={product.video_url.replace("watch?v=", "embed/")} 
-                        title="Product Video" 
-                        frameBorder="0" 
-                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                        allowFullScreen 
-                    />
-                </div>
-            </div>
         )}
 
         {/* Reviews Section */}

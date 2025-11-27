@@ -81,12 +81,20 @@ const Home = () => {
           ]);
 
           if (allProducts.length > 0) {
-            // Sort by created_at by default for initial state
-            const sorted = allProducts.sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
-            setProducts(sorted);
+            // 1. Main Grid List: Sort by created_at by default (Newest First)
+            const sortedByDate = [...allProducts].sort((a,b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime());
+            setProducts(sortedByDate);
             
-            const destacados = sorted.filter(p => p.destacado);
-            setHeroProducts(destacados.length > 0 ? destacados : sorted.slice(0, 5));
+            // 2. Hero Banner Logic: "Smart Rotation"
+            // Priority: Manually 'destacado' products -> Then Top Visited Products
+            const manualFeatured = allProducts.filter(p => p.destacado);
+            const topVisited = [...allProducts]
+                .sort((a, b) => (b.visitas || 0) - (a.visitas || 0))
+                .slice(0, 5); // Top 5 most visited
+
+            // Merge unique products (Manual first, then Popular)
+            const heroSet = new Set([...manualFeatured, ...topVisited]);
+            setHeroProducts(Array.from(heroSet).slice(0, 6)); // Max 6 slides
           }
           
           if (catRes.data) setCategories(catRes.data);
@@ -230,9 +238,9 @@ const Home = () => {
       return (language === 'en' && cat.nombre_en) ? cat.nombre_en : cat.nombre;
   };
 
-  // Safe string construction to avoid template literal syntax errors in Vercel
   const getPageTitle = () => {
-    return t('home_title_1');
+      // Use string concatenation for safety instead of template literals
+      return t('home_title_1');
   };
 
   return (
@@ -384,7 +392,7 @@ const Home = () => {
           </div>
         ) : (
           <>
-             {/* Optimized Grid: gap-4 on mobile, gap-8 on desktop. grid-cols-1 on very small, but maybe grid-cols-2 on sm? Standard is 1 col for robust cards */}
+             {/* Optimized Grid: gap-4 on mobile, gap-8 on desktop */}
              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-8">
               {displayedProducts.map((product, idx) => {
                 const catKey = product.categoria?.trim().toLowerCase();

@@ -26,9 +26,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index, catego
     ? Math.round(((product.precio_anterior - product.precio) / product.precio_anterior) * 100) 
     : 0;
 
-  // Mocking Rating if not present in SQL View yet to ensure "Amazon Style" visual
-  const ratingValue = product.average_rating || 5.0;
-  const reviewsCount = product.reviews_count || Math.floor(Math.random() * (50 - 5 + 1) + 5); // Fallback for demo visuals
+  // Real Data from DB View (fallback to 0 if no reviews yet)
+  const ratingValue = product.average_rating || 0;
+  const reviewsCount = product.reviews_count || 0;
 
   return (
     <div 
@@ -81,16 +81,20 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, index, catego
           {title}
         </h3>
         
-        {/* Amazon-style Ratings */}
+        {/* Amazon-style Ratings - Real Data */}
         <div className="flex items-center gap-1 mb-2">
             <div className="flex text-yellow-400">
                 {[1,2,3,4,5].map(star => (
                      <Star key={star} className={`w-3 h-3 ${star <= Math.round(ratingValue) ? 'fill-current' : 'text-gray-200 dark:text-slate-700'}`} />
                 ))}
             </div>
-            <span className="text-xs font-medium text-cyan-600 dark:text-cyan-400 hover:underline cursor-pointer">
-                {reviewsCount}
-            </span>
+            {reviewsCount > 0 ? (
+                <span className="text-xs font-medium text-cyan-600 dark:text-cyan-400 hover:underline cursor-pointer">
+                    {reviewsCount}
+                </span>
+            ) : (
+                <span className="text-[10px] text-gray-400 italic">Sin reseñas</span>
+            )}
         </div>
 
         <div className="flex items-center justify-between mt-2">

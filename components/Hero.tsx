@@ -20,7 +20,7 @@ export const Hero: React.FC<HeroProps> = ({ products }) => {
     if (products.length <= 1) return;
     const timer = setInterval(() => {
       handleNext();
-    }, 8000); // 8 seconds per slide
+    }, 7000); // 7 seconds per slide - Professional pace
     return () => clearInterval(timer);
   }, [products.length, current]);
 
