@@ -16,18 +16,25 @@ export const Hero: React.FC<HeroProps> = ({ products }) => {
   const [isAnimating, setIsAnimating] = useState(false);
   const { language, t } = useTheme();
 
+  // Create a stable string key to detect if products actually changed
+  const productsKey = products.map(p => p.id).join(',');
+
   useEffect(() => {
+    // Debug log to confirm Vercel loaded the new version
+    console.log("Colorín Banner v2.1: Auto-rotation active (7s)");
+
     if (products.length <= 1) return;
 
     const timer = setInterval(() => {
-      // Logic for PERMANENT infinite loop
-      // We use the functional update 'prev => ...' to ensure we always have the latest state
-      // independent of the closure, preventing the "stop at end" bug.
-      setCurrent((prev) => (prev + 1) % products.length);
+      // Use functional state update to prevent closure staleness
+      setCurrent((prev) => {
+        const next = (prev + 1) % products.length;
+        return next;
+      });
     }, 7000); // 7 seconds fixed interval
 
     return () => clearInterval(timer);
-  }, [products.length]); // dependency only on length, not 'current', to keep the beat steady
+  }, [products.length, productsKey]); // Added productsKey to be robust against data refreshments
 
   // Manual Navigation Guard
   const handleNext = () => {
